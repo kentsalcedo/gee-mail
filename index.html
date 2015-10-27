@@ -1,18 +1,204 @@
 <html>
 	<head>
+		<title>Geemail</title>
 		<script src="js/mail-generator.js"></script>
 		<link href="css/style.css" rel="stylesheet" media="screen">
+		<link rel="icon" type="image/gif" href="images/beemo.gif">
     <script>
       window.onload = function(){
         // ALL OF YOUR JAVASCRIPT CODE SHOULD GO HERE. 
         // We have to use window.onload so your JavaScript doesn't execute until the page has loaded and all HTML has been downloaded to your browser
+
+        // function creates dom items that display each individual emails
+
+		function createEmail (emailArray){
+			for (var i = 0; i < emailArray.length; i++){
+
+				// pulls individual dates, subjects, senders, and email bodies from array objects
+				var myDate = emailArray[i].date;
+				var mySubject = emailArray[i].subject;
+				var mySender = emailArray[i].sender;
+				var myBody = emailArray[i].body;
+
+				// creates div that holds 3 other divs that have sender, subject, and dates
+				var newLine = document.createElement('div');
+				newLine.className = "new_line";
+				document.getElementById('main').appendChild(newLine);
+
+				// creates div that creates line for sender column
+				var newSender = document.createElement('div');
+					newSender.className = 'sender_col';
+				var newSenderNode = document.getElementsByClassName('new_line')[i];
+				newSenderNode.appendChild(newSender);
+				newSender.innerHTML = mySender;
+
+				// creates div that creates line for subject column
+				var newSubject = document.createElement('div');
+					newSubject.className = 'subject_col';
+				var newSubjectNode = document.getElementsByClassName('new_line')[i];
+				newSubjectNode.appendChild(newSubject);
+				newSubject.innerHTML = mySubject;
+
+				// creates div that creates line for date column
+				var newDate = document.createElement('div');
+					newDate.className = 'date_col';
+				var newDateNode = document.getElementsByClassName('new_line')[i];
+				newDateNode.appendChild(newDate);
+				newDate.innerHTML = myDate;
+
+				// creates div that creates line for body column, default to not display
+				var newBody = document.createElement('div');
+					newBody.className = 'body_col';
+				var newBodyNode = document.getElementsByClassName('new_line')[i];
+				newBodyNode.appendChild(newBody);
+				newBody.innerHTML = myBody;
+
+				// event listener, when you click on email line it will reveal the email body text
+				var selectedEmailLine = document.getElementsByClassName('new_line')[i];
+				selectedEmailLine.addEventListener('click', toggle);
+
+			}
+
+			// creates div in the footer that displays email count
+			var emailCounter = document.createElement('div');
+				emailCounter.className = 'emailCounter';
+				emailCounter.id = 'myCounter';
+				var emailCount = emailArray.length;
+			document.getElementById('bottom_info').appendChild(emailCounter);
+			emailCounter.innerHTML = "Inbox Count (" + emailCount + ")";
+
+			// toggle function that allows email body to be clicked to reveal and hide email body text
+			function toggle (event){
+			var showEmail = this.querySelector(".body_col");
+
+				if (showEmail.classList.contains('show') === false){
+						return showEmail.className += ' show';
+				} else {
+					return showEmail.className = 'body_col';
+				}
+			}
+
+
+		}
+
+		// invoke function that creates the original 10 email lines
+		createEmail(geemails);
+
+
+		// function very similar to the function above, creates new emails beyond the 10 
+		// original emails, create each dom items, and creates toggle 
+		function setNewerEmails() {
+			var newerEmails = generateMessage();
+			window.geemails.push(newerEmails);
+
+			var lastMessage = geemails[geemails.length -1];
+
+			console.log(lastMessage);
+
+			var myDate = geemails[geemails.length -1].date;
+			var mySubject = geemails[geemails.length -1].subject;
+			var mySender = geemails[geemails.length -1].sender;
+			var myBody = geemails[geemails.length -1].body;
+
+			var newLine = document.createElement('div');
+			newLine.className = "new_line";
+			document.getElementById('main').appendChild(newLine);
+
+			var newSender = document.createElement('div');
+				newSender.className = 'sender_col';
+			var newSenderNode = document.getElementsByClassName('new_line')[geemails.length -1];
+			newSenderNode.appendChild(newSender);
+			newSender.innerHTML = mySender;
+
+			var newSubject = document.createElement('div');
+				newSubject.className = 'subject_col';
+			var newSubjectNode = document.getElementsByClassName('new_line')[geemails.length -1];
+			newSubjectNode.appendChild(newSubject);
+			newSubject.innerHTML = mySubject;
+
+			var newDate = document.createElement('div');
+				newDate.className = 'date_col';
+			var newDateNode = document.getElementsByClassName('new_line')[geemails.length -1];
+			newDateNode.appendChild(newDate);
+			newDate.innerHTML = myDate;
+
+			var newBody = document.createElement('div');
+				newBody.className = 'body_col';
+			var newBodyNode = document.getElementsByClassName('new_line')[geemails.length -1];
+			newBodyNode.appendChild(newBody);
+			newBody.innerHTML = myBody;
+
+			var selectedEmailLine = document.getElementsByClassName('new_line')[geemails.length -1];
+			selectedEmailLine.addEventListener('click', toggle);
+
+			function toggle (event){
+			var showEmail = this.querySelector(".body_col");
+
+				if (showEmail.classList.contains('show') === false){
+						return showEmail.className += ' show';
+				} else {
+					return showEmail.className = 'body_col';
+				}
+			}
+
+			var emailCounter = document.getElementById('myCounter');
+			// 	emailCounter.className = 'emailCounter';
+			var emailCount = geemails.length;
+			document.getElementById('myCounter');
+			emailCounter.innerHTML = "Inbox Count (" + emailCount + ")";
+
+		}
+
+	// function that generates new email line every 2 seconds
+	function generateNewerMessage() {
+		setInterval (setNewerEmails,2000)
+	}
+
+	generateNewerMessage();
+
         
       };
     </script>
 	</head>
 	<body>
-		<div class="container" id="main">
-			Build Me!
+		<header>
+		<div id='titlebar'>
+			<h1>Gee.mail</h1>
 		</div>
+		</header><br />
+		
+		<section>
+
+		<div class="layoutHolder">
+
+			<div class="sidebar">
+				<ul class='nav'>
+					<li><a href='#'> Inbox </a></li>
+					<li><a href='#'> Starred </a></li>
+					<li><a href='#'> Important </a></li>
+					<li><a href='#'> Sent Mail</a></li>
+					<li><a href='#'> Drafts</a></li>
+				</ul>
+			</div>
+
+			<div class="container" id="main">
+				<div class="headings">
+						<div class="sender_col">Sender</div>
+						<div class="subject_col">Subject</div>
+						<div class="date_col">Date</div>
+				</div>	
+			</div>
+
+
+
+			<div id="bottom_info">
+				<div id="companyName"> +Powered by BMO</div>
+
+			</div>
+
+		</div>
+
+		</section>
+
 	</body>
 </html>
